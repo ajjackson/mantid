@@ -5,6 +5,7 @@
 #     & Institut Laue - Langevin
 # SPDX - License - Identifier: GPL - 3.0 +
 import math
+import numpy as np
 """
 Parameters for instruments and Abins
 """
@@ -15,7 +16,14 @@ Parameters for instruments and Abins
 fwhm = 3.0  # approximate value for the full width at half maximum for Gaussian experimental resolutions
 
 # TwoDMap instrument
+
+# UNUSED?
 delta_width = 0.1  # width of narrow Gaussian which approximates Dirac delta
+
+direct_instrument_resolution = 0.01
+q_size = 60  # how many q_slices
+e_init = [4100.0]  # list of incident energies with energies in cm^-1
+angles = np.arange(3.0, 140.0, 1) # np.arange(3.0, 140.0, 0.20)  # angle detectors in degrees
 
 # TOSCA instrument
 #    TOSCA parameters for calculating Q^2
@@ -45,6 +53,7 @@ crystal_data_group = "SingleCrystal"  # name of the group where SingleCrystalDat
 s_data_group = "S"  # name of the group where dynamical factor is stored
 
 pkt_per_peak = 50  # number of points for each peak broadened by the experimental resolution
+bin_width = 1.0  # defines width of bins used in rebinning of S
 max_wavenumber = 4100.0  # maximum wavenumber in cm^-1 taken into account while creating workspaces (exclusive)
 min_wavenumber = 0.0  # minimal wavenumber in cm^-1 taken into account while creating workspaces (exclusive)
 
@@ -61,5 +70,5 @@ s_absolute_threshold = 10e-8
 optimal_size = 5000000  # this is used to create optimal size of chunk energies for which S is calculated
 # Actual chunk of energies < optimal_size
 
-threads = 3  # number of threads used in parallel calculations
+threads = 4  # number of threads used in parallel calculations
 # Abins internal parameters end ###########################

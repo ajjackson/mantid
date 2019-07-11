@@ -39,8 +39,8 @@ class GeneralAbInitioProgram(object):
         This method should do the following:
 
           1) Open file with vibrational or phonon data (CASTEP: foo.phonon). Name of a file should be stored in
-          self._input_filename. There must be no spaces in the name
-          of a file. Extension of a file (part of a name after '.') is arbitrary.
+          self._input_filename. There must be no spaces in the name of a file.
+          Extension of a file (part of a name after '.') is arbitrary.
 
           2) Method should read from an ab initio file information about frequencies, atomic displacements,
           k-point vectors, weights of k-points and ions.
@@ -189,7 +189,9 @@ class GeneralAbInitioProgram(object):
         self._clerk.save()
 
     def get_formatted_data(self):
-
+        """
+        Check for HD5 cache before reading from ab initio outputs if cache unavailable
+        """
         # try to load ab initio data from *.hdf5 file
         try:
             self._clerk.check_previous_data()

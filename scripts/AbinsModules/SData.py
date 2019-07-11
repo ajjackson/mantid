@@ -27,7 +27,7 @@ class SData(AbinsModules.GeneralData):
             raise ValueError("Invalid sample form %s" % sample_form)
 
         self._data = None  # dictionary which stores dynamical structure factor for all atoms
-        self._bin_width = None
+        self._bin_width = AbinsModules.AbinsParameters.bin_width
 
     def set_bin_width(self, width=None):
         self._bin_width = width

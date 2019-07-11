@@ -27,10 +27,10 @@ class Instrument(object):
 
     def convolve_with_resolution_function(self, frequencies=None, s_dft=None):
         """
-        Convolves discrete spectrum with the  resolution function for the particular instrument.
+        Convolves discrete spectrum with the resolution function for the particular instrument.
 
         :param frequencies: frequencies for which resolution function should be calculated (frequencies in cm-1)
-        :param s_dft:  discrete S calculated directly from DFT
+        :param s_dft: discrete S calculated directly from DFT
 
        """
         return None
