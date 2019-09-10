@@ -215,17 +215,17 @@ class SPowderSemiEmpiricalCalculator(object):
         else:
             max_threshold = AbinsModules.AbinsConstants.MAX_THRESHOLD
 
-            is_not_smaller = s_max - self._max_s_previous_order[atom] > 1.3 * self._max_s_previous_order[atom]
-            allow_attempts = self._s_current_threshold[atom] < max_threshold
+            # is_not_smaller = s_max - self._max_s_previous_order[atom] > 1.3 * self._max_s_previous_order[atom]
+            # allow_attempts = self._s_current_threshold[atom] < max_threshold
 
-            if is_not_smaller and allow_attempts:
+            # if is_not_smaller and allow_attempts:
 
-                msg = ("Numerical instability detected. Threshold for S has to be increased." +
-                       " Current max S is {} and the previous is {} for order {}."
-                       .format(s_max, self._max_s_previous_order[atom], order))
-                raise StabilityError(msg)
-            else:
-                self._max_s_previous_order[atom] = max(s_max, small_s)
+            #     msg = ("Numerical instability detected. Threshold for S has to be increased." +
+            #            " Current max S is {} and the previous is {} for order {}."
+            #            .format(s_max, self._max_s_previous_order[atom], order))
+            #     raise StabilityError(msg)
+            # else:
+            #     self._max_s_previous_order[atom] = max(s_max, small_s)
 
         indices = s > threshold
         # indices are guaranteed to be a numpy array (but can be an empty numpy array)
@@ -618,7 +618,7 @@ class SPowderSemiEmpiricalCalculator(object):
 
             all_q2 = self._instrument.calculate_q_powder(input_data=self._frequencies)
             all_q = np.sqrt(all_q2)
-            shift = AbinsModules.AbinsConstants.PYTHON_INDEX_SHIFT
+            shift = AbinsModules.AbinsConstants.FIRST_BIN_INDEX
             bins_q = np.digitize(all_q, self._q_bins) - shift
             small_q_indx = all_q < AbinsModules.AbinsConstants.Q_END
             temp_full_s[bins_q[small_q_indx], small_q_indx] = rebined_broad_spectrum[small_q_indx]
