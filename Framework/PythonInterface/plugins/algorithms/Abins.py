@@ -566,6 +566,7 @@ class Abins(PythonAlgorithm):
                                                                         nucleons_number=nucleons_number)
 
         n_q_bins, n_freq_bins = s_points.shape
+
         wrk = WorkspaceFactory.create("Workspace2D", NVectors=n_freq_bins, XLength=n_q_bins + 1, YLength=n_q_bins)
 
         freq_axis = NumericAxis.create(n_freq_bins)
@@ -649,15 +650,16 @@ class Abins(PythonAlgorithm):
             if self._instrument.get_name() in AbinsModules.AbinsConstants.ONE_DIMENSIONAL_INSTRUMENTS:
                 s_atoms = np.zeros_like(ws.dataY(0))
             if self._instrument.get_name() in AbinsModules.AbinsConstants.TWO_DIMENSIONAL_INSTRUMENTS:
-                s_atoms = np.zeros([AbinsModules.AbinsParameters.q_size] + list(ws.dataY(0).shape))
+                n_q, n_energy_bins = AbinsModules.AbinsParameters.q_size, ws.getDimension(1).getNBins()
+                s_atoms = np.zeros([n_q, n_energy_bins])
 
             # collect all S
             for partial_ws in local_partial_workspaces:
                 if self._instrument.get_name() in AbinsModules.AbinsConstants.ONE_DIMENSIONAL_INSTRUMENTS:
                     s_atoms += mtd[partial_ws].dataY(0)
                 elif self._instrument.get_name() in AbinsModules.AbinsConstants.TWO_DIMENSIONAL_INSTRUMENTS:
-                    for i in range(AbinsModules.AbinsParameters.q_size):
-                        s_atoms[i] += mtd[partial_ws].dataY(i)
+                    for i in range(n_energy_bins):
+                        s_atoms[:, i] += mtd[partial_ws].dataY(i)
 
             # create workspace with S
             self._fill_s_workspace(s_atoms, total_workspace)

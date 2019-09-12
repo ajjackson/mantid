@@ -23,6 +23,8 @@ class TwoDMap(Instrument):
 
         Calculation is restricted to the region E < E_i
 
+        Angle is determined from from the attribute self._angle
+
         :param input_data: list with frequencies for the given k-point.
         :type array-like:
         """
