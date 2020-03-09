@@ -30,7 +30,7 @@ class AtomsData(AbinsModules.GeneralData):
         """
 
         if not isinstance(item, dict):
-            raise ValueError("Every element of AtomsData has  a form of the dictionary.")
+            raise ValueError("Every element of AtomsData should be a dictionary.")
 
         if not sorted(item.keys()) == sorted(AbinsModules.AbinsConstants.ALL_KEYWORDS_ATOMS_DATA):
             raise ValueError("Invalid structure of the dictionary to be added.")
