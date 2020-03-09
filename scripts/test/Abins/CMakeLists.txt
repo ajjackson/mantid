@@ -7,6 +7,7 @@ set ( TEST_PY_FILES
    AbinsCalculateQToscaTest.py
    AbinsCalculateSingleCrystalTest.py
    AbinsCalculateSPowderTest.py
+   AbinsDataTest.py
    AbinsDWSingleCrystalDataTest.py
    AbinsFrequencyPowderGeneratorTest.py
    AbinsInstrumentTest.py

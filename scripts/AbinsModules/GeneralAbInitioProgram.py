@@ -173,9 +173,7 @@ class GeneralAbInitioProgram(object):
         atoms = AbinsModules.AtomsData(num_atoms=self._num_atoms)
         atoms.set(data["atoms"])
 
-        result_data = AbinsModules.AbinsData()
-        result_data.set(k_points_data=k_points, atoms_data=atoms)
-        return result_data
+        return AbinsModules.AbinsData(k_points_data=k_points, atoms_data=atoms)
 
     def save_ab_initio_data(self, data=None):
         """
