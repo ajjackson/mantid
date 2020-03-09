@@ -9,7 +9,7 @@ import six
 import AbinsModules
 
 
-class PowderData(AbinsModules.GeneralData):
+class PowderData:
     """
     Class for storing powder data.
     """

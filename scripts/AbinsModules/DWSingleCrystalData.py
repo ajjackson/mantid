@@ -12,7 +12,7 @@ import six
 import AbinsModules
 
 
-class DWSingleCrystalData(AbinsModules.GeneralData):
+class DWSingleCrystalData:
     """
     Data structure for Debye-Waller coefficients for single crystals (sample form is a SingleCrystal).
     """

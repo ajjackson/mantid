@@ -10,7 +10,7 @@ import six
 import AbinsModules
 
 
-class AtomsData(AbinsModules.GeneralData):
+class AtomsData:
 
     def __init__(self, num_atoms=None):
         super(AtomsData, self).__init__()

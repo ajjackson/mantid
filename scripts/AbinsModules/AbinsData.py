@@ -8,7 +8,7 @@ from __future__ import (absolute_import, division, print_function)
 import AbinsModules
 
 
-class AbinsData(AbinsModules.GeneralData):
+class AbinsData:
     """
     Class for storing input DFT data.
     """

@@ -8,7 +8,7 @@ from __future__ import (absolute_import, division, print_function)
 import AbinsModules
 
 
-class SingleCrystalData(AbinsModules.GeneralData):
+class SingleCrystalData:
     """
     Class for storing the data in case sample has a form of single crystal.
     """

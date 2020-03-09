@@ -10,7 +10,7 @@ import six
 import AbinsModules
 
 
-class KpointsData(AbinsModules.GeneralData):
+class KpointsData:
     """
     Class for storing k-points data. The data is arranged as a dictionary.
     The dictionary has the following form:

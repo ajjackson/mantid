@@ -40,7 +40,6 @@ from .CalculateS import CalculateS
 from .SPowderSemiEmpiricalCalculator import SPowderSemiEmpiricalCalculator
 
 # Data
-from .GeneralData import GeneralData
 from .KpointsData import KpointsData
 from .AtomsData import AtomsData
 from .AbinsData import AbinsData

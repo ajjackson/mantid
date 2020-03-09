@@ -11,7 +11,7 @@ import AbinsModules
 from AbinsModules import AbinsConstants, AbinsParameters
 
 
-class SData(AbinsModules.GeneralData):
+class SData:
     """
     Class for storing S(Q, omega)
     """
