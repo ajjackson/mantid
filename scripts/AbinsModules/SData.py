@@ -7,7 +7,6 @@
 from __future__ import (absolute_import, division, print_function)
 import numpy as np
 from mantid.kernel import logger as mantid_logger
-import AbinsModules
 from AbinsModules import AbinsConstants, AbinsParameters
 
 
