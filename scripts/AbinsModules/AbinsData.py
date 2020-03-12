@@ -64,11 +64,16 @@ class AbinsData:
 
     def _check_consistent_dimensions(self) -> None:
         """Raise an error if atoms_data and k_points_data have different numbers of atoms"""
+        atoms_data, k_points_data = self.get_atoms_data(), self.get_kpoints_data().extract()
+
         data = self.extract()
-        for k in data["k_points_data"]["atomic_displacements"]:
-            if data["k_points_data"]["atomic_displacements"][k].shape[0] != len(data["atoms_data"]):
-                raise ValueError("Abins data is inconsistent: number of atoms in structure does not match "
-                                 "displacement data.")
+        atoms_data_n = len(atoms_data)
+        #k_points_data_n = k_points_data["atomic_displacements"].shape[1]
+        for disps in k_points_data["atomic_displacements"].values():
+            k_points_data_n = disps.shape[0]
+            if k_points_data_n != atoms_data_n:
+                raise ValueError("Abins data is inconsistent: number of atoms in structure ({}) does not match "
+                                 "displacement data ({}).".format(atoms_data_n, k_points_data_n))
 
     def extract(self) -> Dict[str, Any]:
         """Get a dict with k-points data and atoms data"""
