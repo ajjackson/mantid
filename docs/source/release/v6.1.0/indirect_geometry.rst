@@ -27,4 +27,6 @@ Improvements
 ############
 - In Indirect Data Analysis F(Q) fit the default fitting function remains None when switching to EISF.
 
+=======
+
 :ref:`Release 6.1.0 <v6.1.0>`
