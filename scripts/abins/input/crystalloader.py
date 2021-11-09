@@ -265,7 +265,7 @@ class CRYSTALLoader(AbInitioLoader):
         # only one k-point
         else:
 
-            end_msgs = ["******", "ACLIMAX"]
+            end_msgs = ["******", "ACLIMAX", "ESTIMATED NUMBER OF IMAGINARY FREQS"]
             inside_block = True
             freq = []
             xdisp = []
