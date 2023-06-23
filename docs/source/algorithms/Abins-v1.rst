@@ -83,6 +83,16 @@ Output:
     benzene_wrk_H_total
     benzene_wrk_H
 
+.. testcleanup:: AbinsCastepSimple
+
+    import os
+    from pathlib import Path
+
+    cwd = Path.cwd()
+    for file_or_glob in ('benzene.hdf5', 'benzene_wrk_*.dat'):
+        for path in cwd.glob(file_or_glob):
+            os.remove(path)
+
 **Example - loading CRYSTAL phonon data:**
 
 .. testcode:: AbinsCrystalSimple
@@ -107,9 +117,19 @@ Output:
     wrk_O_total
     wrk_O
 
+.. testcleanup:: AbinsCrystalSimple
+
+    import os
+    from pathlib import Path
+
+    cwd = Path.cwd()
+    for file_or_glob in ('b3lyp.hdf5', 'wrk_*.dat'):
+        for path in cwd.glob(file_or_glob):
+            os.remove(path)
+
 **Example - calling AbINS with more arguments:**
 
-.. testcode:: AbinsexplicitParameters
+.. testcode:: AbinsExplicitParameters
 
     wrk_verbose=Abins(AbInitioProgram="CASTEP", VibrationalOrPhononFile="benzene.phonon",
                       ExperimentalFile="benzene_experimental.dat",
@@ -121,7 +141,7 @@ Output:
 
 Output:
 
-.. testoutput:: AbinsexplicitParameters
+.. testoutput:: AbinsExplicitParameters
 
     experimental_wrk
     wrk_verbose_total
@@ -131,6 +151,16 @@ Output:
     wrk_verbose_atom_1
     wrk_verbose_atom_2_total
     wrk_verbose_atom_2
+
+.. testcleanup:: AbinsExplicitParameters
+
+    import os
+    from pathlib import Path
+
+    cwd = Path.cwd()
+    for file_or_glob in ('benzene.hdf5', 'wrk_verbose_*.dat'):
+        for path in cwd.glob(file_or_glob):
+            os.remove(path)
 
 .. categories::
 
