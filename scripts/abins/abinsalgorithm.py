@@ -7,6 +7,8 @@
 
 # Supporting functions for the Abins Algorithm that don't belong in
 # another part of AbinsModules.
+from itertools import groupby
+from operator import attrgetter, itemgetter
 import os
 from pathlib import Path
 import re
@@ -471,8 +473,6 @@ class AbinsAlgorithm:
         """
         from abins.constants import ATOM_PREFIX
 
-        from operator import attrgetter, itemgetter
-
         masses = map(itemgetter("mass"), atoms_data)
         symbols = map(itemgetter("symbol"), atoms_data)
         rows = s_data.iter_rows(symbols=symbols, masses=masses)
@@ -533,16 +533,22 @@ class AbinsAlgorithm:
 
         element = Atom(symbol=element_symbol)
 
-        for atom_index in range(num_atoms):
-            if atoms_data[atom_index]["symbol"] == element_symbol and abs(atoms_data[atom_index]["mass"] - mass) < MASS_EPS:
-                temp_s_atom_data.fill(0.0)
+        masses = map(itemgetter("mass"), atoms_data)
+        symbols = map(itemgetter("symbol"), atoms_data)
+        rows = s_data.iter_rows(symbols=symbols, masses=masses)
 
-                for order in range(1, self._max_event_order + 1):
-                    order_indx = order - 1
-                    temp_s_order = s_data[atom_index]["order_%s" % order]
-                    temp_s_atom_data[order_indx] = temp_s_order
+        # Apply filters: symbol, mass, quantum order
+        rows = filter(lambda row: row.atom_symbol == element_symbol, rows)
+        if mass is not None:
+            rows = filter(lambda row: abs(row.atom_mass - mass) < MASS_EPS, rows)
+        rows = filter(lambda row: (row.quantum_order is None) or (row.quantum_order <= self._max_event_order), rows)
 
-                s_atom_data += temp_s_atom_data  # sum S over the atoms of the same type
+        # Sort and group by quantum order
+        rows = sorted(rows, key=attrgetter("quantum_order"))
+        grouped_rows = groupby(rows, key=attrgetter("quantum_order"))
+
+        for order, group in grouped_rows:
+            s_atom_data[order - 1] = sum(group, start=next(group)).data
 
         total_s_atom_data = np.sum(s_atom_data, axis=0)
 
