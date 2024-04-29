@@ -6,10 +6,15 @@
 # SPDX - License - Identifier: GPL - 3.0 +
 import collections.abc
 from copy import deepcopy
-from typing import Dict, List, Optional, overload, Sequence, TypeVar, Union
+from dataclasses import dataclass
+from enum import auto, Enum
+from itertools import repeat
+from typing import Dict, Iterable, Iterator, List, Optional, overload, Sequence, TypeVar, Union
 import numpy as np
 from numbers import Real
+
 from scipy.signal import convolve
+from typing_extensions import Self
 
 import abins
 from abins.constants import ALL_KEYWORDS_ATOMS_S_DATA, ALL_SAMPLE_FORMS, ATOM_LABEL, FLOAT_TYPE, S_LABEL
@@ -24,9 +29,45 @@ SD = TypeVar("SD", bound="SData")
 SDBA = TypeVar("SDBA", bound="SDataByAngle")
 
 
+class ScatteringType(Enum):
+    INCOHERENT = auto()
+    COHERENT = auto()
+
+
+@dataclass
+class SDataRow:
+    """Class representing a contribution to S(Q, ω)
+
+    The associated (Q, ω) is not included; each SDataRow contains metadata with
+    an array of S values and the values of other axes shoul be managed
+    elsewhere (i.e. in a parent SData object)
+
+    All metadata is optional, and may be clobbered if dissimilar items are
+    combined.
+    """
+
+    data: np.ndarray
+    atom_index: Optional[int] = None
+    atom_symbol: Optional[str] = None
+    atom_mass: Optional[float] = None
+    quantum_order: Optional[int] = None
+    scattering: Optional[ScatteringType] = None
+
+    def __add__(self, other: Self) -> Self:
+        """Combine contributions to S, keeping common metadata only"""
+        data = self.data + other.data
+
+        metadata = {
+            attr: getattr(self, attr)
+            for attr in ("atom_index", "atom_symbol", "quantum_order", "scattering")
+            if getattr(self, attr) == getattr(other, attr)
+        }
+        return type(self)(data=data, **metadata)
+
+
 class SData(collections.abc.Sequence):
     """
-    Class for storing S(Q, omega) with relevant metadata
+    Class for storing S(Q, ω) with relevant metadata
 
     Indexing will return dict(s) of S by quantum order for atom(s)
     corresponding to index/slice.
@@ -114,6 +155,37 @@ class SData(collections.abc.Sequence):
         for atom_key, atom_data in data.items():
             for order, order_data in atom_data["s"].items():
                 self._data[atom_key]["s"][order] += order_data
+
+    def iter_rows(self, symbols: Optional[Iterable[str]] = None, masses: Optional[Iterable[float]] = None) -> Iterator[SDataRow]:
+        """Access data as a series of database-like rows
+
+        This facilitates "split-apply-combine" -style processing
+
+        At this stage of development symbols and scattering type are unavailable
+
+        Args:
+            symbols: Iterable of atom symbols (i.e. element) corresponding to atom indices
+            masses: Iterable of atomic masses (in a.m.u.) corresponding to atom indices
+        """
+        if symbols is None:
+            symbols = repeat(None)
+        if masses is None:
+            masses = repeat(None)
+
+        prefix_length = len(ATOM_LABEL) + 1  # +1 for _ in "atom_"
+        sorted_atom_keys = sorted(self._data.keys(), key=(lambda key: int(key[prefix_length:])))
+
+        for atom_key, symbol, mass in zip(sorted_atom_keys, symbols, masses):
+            for order_key, data in self._data[atom_key]["s"].items():
+                order = int(order_key.split("_")[-1])
+                yield SDataRow(
+                    data=data,
+                    atom_index=int(atom_key.split("_")[-1]),
+                    atom_symbol=symbol,
+                    atom_mass=mass,
+                    quantum_order=order,
+                    scattering=ScatteringType.INCOHERENT,
+                )
 
     def apply_dw(self, dw: np.array, min_order=1, max_order=2) -> None:
         """Multiply S by frequency-dependent scale factor for all atoms
